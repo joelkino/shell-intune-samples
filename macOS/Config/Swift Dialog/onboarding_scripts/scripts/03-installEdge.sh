@@ -21,67 +21,17 @@
 weburl="https://go.microsoft.com/fwlink/?linkid=2093504"                                        # What is the Azure Blob Storage URL?
 appname="Microsoft Edge"                                                                        # The name of our App deployment script
 app="Microsoft Edge.app"                                                                        # The actual name of our App once installed
-logandmetadir="/Library/Application Support/Microsoft/IntuneScripts/installEdge"                # The location of our logs and last updated data
+logandmetadir="/Library/Application Support/Microsoft/IntuneScripts/installEdge"                               # The location of our logs and last updated data
 processpath="/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"                    # The process name of the App we are installing
 terminateprocess="false"                                                                        # Do we want to terminate the running process? If false we'll wait until its not running
-autoUpdate="true"                                                                               # If true, application updates itself and we should not attempt to update
+autoUpdate="true"                                                                              # If true, application updates itself and we should not attempt to update
+waitForSplashScreen=true                                                                    # Should we hold the script until an onboard splashscreen is running?   
+SplashScreenProcess="Dialog"                                                                # If we do wait for a splash screen, what's the process name? Octory | Dialog
 
 # Generated variables
 tempdir=$(mktemp -d)
 log="$logandmetadir/$appname.log"                                               # The location of the script log file
 metafile="$logandmetadir/$appname.meta"                                         # The location of our meta file (for updates)
-
-function installAria2c () {
-
-    #####################################
-    ## Aria2c installation
-    #####################
-    ARIA2="/usr/local/aria2/bin/aria2c"
-    aria2Url="https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-osx-darwin.dmg"
-    if [[ -f $ARIA2 ]]; then
-        echo "$(date) | Aria2 already installed, nothing to do"
-    else
-        echo "$(date) | Aria2 missing, lets download and install"
-        filename=$(basename "$aria2Url")
-        output="$tempdir/$filename"
-        curl -f -s --connect-timeout 30 --retry 5 --retry-delay 60 -L -o "$output" "$aria2Url"
-        if [ $? -ne 0 ]; then
-            echo "$(date) | Aria download failed"
-            echo "$(date) | Output: [$output]"
-            echo "$(date) | URL [$aria2Url]"
-            exit 1
-        else
-            echo "$(date) | Downloaded aria2"
-        fi
-
-        # Mount aria2 DMG
-        mountpoint="$tempdir/aria2"
-        echo "$(date) | Mounting Aria DMG..."
-        hdiutil attach -quiet -nobrowse -mountpoint "$mountpoint" "$output"
-        if [ $? -ne 0 ]; then
-            echo "$(date) | Aria mount failed"
-            echo "$(date) | Mount: [$mountpoint]"
-            echo "$(date) | Temp File [$output]"
-            exit 1
-        else
-            echo "$(date) | Mounted DMG"
-        fi
-        
-        # Install aria2 PKG from inside the DMG
-        sudo installer -pkg "$mountpoint/aria2.pkg" -target /
-        if [ $? -ne 0 ]; then
-            echo "$(date) | Install failed"
-            echo "$(date) | PKG: [$mountpoint/aria2.pkg]"
-            exit 1
-        else
-            echo "$(date) | Aria2 installed"
-            hdiutil detach -quiet "$mountpoint"
-        fi
-    rm -rf "$output"
-    fi
-
-
-}
 
 # function to delay script if the specified process is running
 waitForProcess () {
@@ -265,12 +215,12 @@ function downloadApp () {
     echo "$(date) | Starting downlading of [$appname]"
 
     #download the file
+    #updateSplashScreen installing              # Octory
     updateSplashScreen wait Downloading         # Swift Dialog
     echo "$(date) | Downloading $appname"
 
     cd "$tempdir"
-    #curl -f -s --connect-timeout 30 --retry 5 --retry-delay 60 -L -J -o "edge.pkg" "$weburl"
-    $ARIA2 -q -x16 -s16 -d "$tempdir" "$weburl" --download-result=hide --summary-interval=0
+    curl -f -s --connect-timeout 30 --retry 5 --retry-delay 60 -L -J -o "edge.pkg" "$weburl"
     if [ $? == 0 ]; then
 
             # We have downloaded a file, we need to know what the file is called and what type of file it is
@@ -328,6 +278,7 @@ function downloadApp () {
     else
     
         echo "$(date) | Failure to download [$weburl] to [$tempfile]"
+        #updateSplashScreen failed              # Octory
         updateSplashScreen fail Failed         # Swift Dialog
         exit 1
     fi
@@ -430,6 +381,9 @@ function installPKG () {
 
     echo "$(date) | Installing $appname"
 
+
+    # Update Octory monitor
+    #updateSplashScreen installing              # Octory
     updateSplashScreen wait Installing         # Swift Dialog
 
     # Remove existing files if present
@@ -437,42 +391,27 @@ function installPKG () {
         rm -rf "/Applications/$app"
     fi
 
-    # Attempting Installation
-    max_attempts=5
-    attempt=1
+    installer -pkg "$tempfile" -target /Applications
 
-    while [ $attempt -le $max_attempts ]; do
-        echo "$(date) | Attempting installation (Attempt $attempt)..."
+    # Checking if the app was installed successfully
+    if [ "$?" = "0" ]; then
 
-        # Run the installer command
-        installer -pkg "$tempfile" -target /
-
-        # Checking if the app was installed successfully
-        if [ "$?" = "0" ]; then
-
-            echo "$(date) | $appname Installed"
-            echo "$(date) | Cleaning Up"
-            rm -rf "$tempdir"
-
-            echo "$(date) | Application [$appname] succesfully installed"
-            fetchLastModifiedDate update
-            updateSplashScreen success Installed         # Swift Dialog
-            break
-
-        else
-
-            echo "$(date) | Failed to install $appname, trying $attempt of $max_attempts"
-            updateSplashScreen error "Failed, retrying $attempt of $max_attempts"
-            attempt=$((attempt + 1))  # Increment the attempt counter
-            sleep 5
-        fi
-    
-    done
-
-    if [ $attempt -gt $max_attempts ]; then
-        echo "$(date) | Installation failed after $max_attempts attempts. Exiting the script."
-        updateSplashScreen fail "Failed, after $max_attempts retries"
+        echo "$(date) | $appname Installed"
+        echo "$(date) | Cleaning Up"
         rm -rf "$tempdir"
+
+        echo "$(date) | Application [$appname] succesfully installed"
+        fetchLastModifiedDate update
+        #updateSplashScreen installed                   # Octory
+        updateSplashScreen success Installed            # Swift Dialog
+        exit 0
+
+    else
+
+        echo "$(date) | Failed to install $appname"
+        rm -rf "$tempdir"
+        #updateSplashScreen failed                   # Octory
+        updateSplashScreen fail Failed                  # Swift Dialog
         exit 1
     fi
 
@@ -508,6 +447,8 @@ function installDMG () {
 
 
     echo "$(date) | Installing [$appname]"
+    updateOctory installing
+    #updateSplashScreen installing                      # Octory
     updateSplashScreen wait Installing                  # Swift Dialog
 
     # Mount the dmg file...
@@ -541,11 +482,13 @@ function installDMG () {
         sudo chown -R root:wheel "/Applications/$app"
         echo "$(date) | Application [$appname] succesfully installed"
         fetchLastModifiedDate update
+        #updateSplashScreen installed                       # Octory
         updateSplashScreen success Installed                # Swift Dialog
         exit 0
     else
         echo "$(date) | Failed to install [$appname]"
         rm -rf "$tempdir"
+        #updateSplashScreen failed                         # Octory
         updateSplashScreen fail Failed                     # Swift Dialog
         exit 1
     fi
@@ -580,6 +523,7 @@ function installZIP () {
     waitForProcess "$processpath" "300" "$terminateprocess"
 
     echo "$(date) | Installing $appname"
+    #updateSplashScreen installing                         # Octory
     updateSplashScreen wait Installing                     # Swift Dialog
     # Change into temp dir
     cd "$tempdir"
@@ -588,6 +532,7 @@ function installZIP () {
     else
       echo "$(date) | failed to change to $tempfile"
       if [ -d "$tempdir" ]; then rm -rf $tempdir; fi
+        #updateSplashScreen failed                         # Octory
         updateSplashScreen fail Failed                     # Swift Dialog
       exit 1
     fi
@@ -599,6 +544,7 @@ function installZIP () {
     else
       echo "$(date) | failed to unzip $tempfile"
       if [ -d "$tempdir" ]; then rm -rf $tempdir; fi
+        #updateSplashScreen failed                         # Octory
         updateSplashScreen fail Failed                     # Swift Dialog
       exit 1
     fi
@@ -618,6 +564,7 @@ function installZIP () {
     else
       echo "$(date) | failed to move $appname to /Applications"
       if [ -d "$tempdir" ]; then rm -rf $tempdir; fi
+        #updateSplashScreen failed                         # Octory
         updateSplashScreen fail Failed                     # Swift Dialog
       exit 1
     fi
@@ -630,6 +577,7 @@ function installZIP () {
     else
       echo "$(date) | failed to apply permissions to $appname"
       if [ -d "$tempdir" ]; then rm -rf $tempdir; fi
+        #updateSplashScreen failed                         # Octory
         updateSplashScreen fail Failed                     # Swift Dialog
       exit 1
     fi
@@ -639,6 +587,7 @@ function installZIP () {
         if [[ -a "/Applications/$app" ]]; then
 
             echo "$(date) | $appname Installed"
+            #updateSplashScreen installed                            # Octory
             updateSplashScreen success Installed                     # Swift Dialog
             echo "$(date) | Cleaning Up"
             rm -rf "$tempfile"
@@ -676,6 +625,7 @@ function updateSplashScreen () {
     ##
     ##  Parameters (updateSplashScreen parameter1 parameter2
     ## 
+    ##  Octory
     ##
     ##      Param 1 = State
     ##
@@ -748,9 +698,6 @@ echo "##############################################################"
 echo "# $(date) | Logging install of [$appname] to [$log]"
 echo "############################################################"
 echo ""
-
-# Install Aria2c if we don't already have it
-installAria2c
 
 # Install Rosetta if we need it
 checkForRosetta2
