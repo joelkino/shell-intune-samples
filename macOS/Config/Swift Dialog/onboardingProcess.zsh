@@ -21,10 +21,10 @@
 
 # User Defined variables
 
-onboardingScriptsUrl="https://github.com/microsoft/shell-intune-samples/raw/master/macOS/Config/Swift%20Dialog/onboarding_scripts.zip" # Enter your own URL here
+onboardingScriptsUrl="https://github.com/joelkino/shell-intune-samples/blob/cbc0fa335f3411ae7a6bdc99c92d51c77b156573/macOS/Config/Swift%20Dialog/onboarding_scripts.zip" # Enter your own URL here
 appname="onBoarding"                                                 
 logandmetadir="/Library/Application Support/Microsoft/IntuneScripts/$appname"   # The location of our logs and last updated data
-enrollmentWindowHours=1                                                         # The number of hours after enrollment that the script should run
+enrollmentWindowHours=.05                                                        # The number of hours after enrollment that the script should run
 checkEnrollmentTime=true                                                        # Should we check the enrollment time? (Do NOT set this to false in production!!)
 
 # Generated variables

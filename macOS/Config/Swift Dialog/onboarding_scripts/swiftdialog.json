@@ -2,13 +2,17 @@
     "title" : "Welcome to macOS Onboarder by Interconnekt",
     "message" : "Please wait while we configure your Mac...",
     "button1text": "Exit",
-    "icon" : "/Library/Application Support/SwiftDialogResources/icons/catlab.png",
+    "icon" : "/Library/Application Support/SwiftDialogResources/icons/Interconnekt_Logo.png",
     "iconsize" : "400",
     "listitem" : [
       {"title" : "Company Portal", "icon" : "/Library/Application Support/SwiftDialogResources/icons/CompanyPortal.png", "status" : "pending", "statustext" : "Pending"},
       {"title" : "Microsoft Office", "icon" : "/Library/Application Support/SwiftDialogResources/icons/office.png", "status" : "pending", "statustext" : "Pending"},
       {"title" : "Microsoft Edge", "icon" : "/Library/Application Support/SwiftDialogResources/icons/Edge.png", "status" : "pending", "statustext" : "Pending"},
       {"title" : "Microsoft Defender", "icon" : "/Library/Application Support/SwiftDialogResources/icons/Defender.png", "status" : "pending", "statustext" : "Pending"},
+      {"title" : "Huntress MDR Agent", "icon" : "/Library/Application Support/SwiftDialogResources/icons/Huntress.png", "status" : "pending", "statustext" : "Pending"},
+      {"title" : "Huntress Extension Authorisation", "icon" : "/Library/Application Support/SwiftDialogResources/icons/Huntress.png", "status" : "pending", "statustext" : "Pending"},
+      {"title" : "Enable OneDrive Finder Integration", "icon" : "/Library/Application Support/SwiftDialogResources/icons/OneDrive.png", "status" : "pending", "statustext" : "Pending"},
+      {"title" : "Configure Dock", "icon" : "/Library/Application Support/SwiftDialogResources/icons/Settings.png", "status" : "pending", "statustext" : "Pending"},
       {"title" : "Device Rename", "icon" : "/Library/Application Support/SwiftDialogResources/icons/Settings.png", "status" : "pending", "statustext" : "Pending"},
       {"title" : "Set Timezone", "icon" : "/Library/Application Support/SwiftDialogResources/icons/Settings.png", "status" : "pending", "statustext" : "Pending"},
       {"title" : "Wallpaper", "icon" : "/Library/Application Support/SwiftDialogResources/icons/Settings.png", "status" : "pending", "statustext" : "Pending"}
