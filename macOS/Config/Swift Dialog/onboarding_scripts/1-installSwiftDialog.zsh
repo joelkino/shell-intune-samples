@@ -130,13 +130,13 @@ fi
 #
 echo "$(date) | Downloading $appname [$weburl]"
 cd "$tempdir"
-#curl -f -s --connect-timeout 30 --retry 5 --retry-delay 60 --compressed -L -J -o "$tempdir/swiftdialog.pkg" "$weburl"
-$ARIA2 -q -x16 -s16 -d "$tempdir" -o "swiftdialog.pkg" "$weburl" --download-result=hide --summary-interval=0
+#curl -f -s --connect-timeout 30 --retry 5 --retry-delay 60 --compressed -L -J -o "$tempdir/dialog-2.5.0-4768.pkg" "$weburl"
+$ARIA2 -q -x16 -s16 -d "$tempdir" -o "dialog-2.5.0-4768.pkg" "$weburl" --download-result=hide --summary-interval=0
 
 #
 # Installing Swift Dialog
 #
-installer -pkg "$tempdir/swiftdialog.pkg" -target /
+installer -pkg "$tempdir/dialog-2.5.0-4768.pkg" -target /
 
 # Wait for Dock
 until ps aux | grep /System/Library/CoreServices/Dock.app/Contents/MacOS/Dock | grep -v grep &>/dev/null; do
