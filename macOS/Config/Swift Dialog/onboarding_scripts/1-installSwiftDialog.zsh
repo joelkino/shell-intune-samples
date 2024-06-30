@@ -21,7 +21,7 @@
 
 # User Defined variables
 
-weburl="https://github.com/swiftDialog/swiftDialog/releases/download/v2.5.0/dialog-2.5.0-4768.pkg"
+weburl="https://github.com/bartreardon/swiftDialog/releases/download/v2.2/dialog-2.2.0-4535.pkg"
 swiftdialogJson='https://blobmacosonboarder.blob.core.windows.net/macos-onboarder/Swift%20Dialog/onboarding_scripts/swiftdialog.json'
 appname="Swift Dialog"                                                 
 logandmetadir="/Library/Application Support/Microsoft/IntuneScripts/$appname"   # The location of our logs and last updated data
@@ -130,13 +130,13 @@ fi
 #
 echo "$(date) | Downloading $appname [$weburl]"
 cd "$tempdir"
-#curl -f -s --connect-timeout 30 --retry 5 --retry-delay 60 --compressed -L -J -o "$tempdir/dialog-2.5.0-4768.pkg" "$weburl"
-$ARIA2 -q -x16 -s16 -d "$tempdir" -o "dialog-2.5.0-4768.pkg" "$weburl" --download-result=hide --summary-interval=0
+#curl -f -s --connect-timeout 30 --retry 5 --retry-delay 60 --compressed -L -J -o "$tempdir/swiftdialog.pkg" "$weburl"
+$ARIA2 -q -x16 -s16 -d "$tempdir" -o "swiftdialog.pkg" "$weburl" --download-result=hide --summary-interval=0
 
 #
 # Installing Swift Dialog
 #
-installer -pkg "$tempdir/dialog-2.5.0-4768.pkg" -target /
+installer -pkg "$tempdir/swiftdialog.pkg" -target /
 
 # Wait for Dock
 until ps aux | grep /System/Library/CoreServices/Dock.app/Contents/MacOS/Dock | grep -v grep &>/dev/null; do
