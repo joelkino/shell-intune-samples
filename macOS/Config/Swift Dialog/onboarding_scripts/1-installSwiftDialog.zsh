@@ -21,8 +21,8 @@
 
 # User Defined variables
 
-weburl="https://github.com/bartreardon/swiftDialog/releases/download/v2.2/dialog-2.2.0-4535.pkg"
-swiftdialogJson='https://catlab.blob.core.windows.net/swiftdialog/catlab.json'
+weburl="https://github.com/swiftDialog/swiftDialog/releases/download/v2.5.0/dialog-2.5.0-4768.pkg"
+swiftdialogJson='https://blobmacosonboarder.blob.core.windows.net/macos-onboarder/Swift%20Dialog/onboarding_scripts/swiftdialog.json'
 appname="Swift Dialog"                                                 
 logandmetadir="/Library/Application Support/Microsoft/IntuneScripts/$appname"   # The location of our logs and last updated data
 dialogWidth="1024"                                                               # Width of the dialog box

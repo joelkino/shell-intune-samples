@@ -21,7 +21,7 @@
 
 # User Defined variables
 
-onboardingScriptsUrl="https://github.com/joelkino/shell-intune-samples/blob/cbc0fa335f3411ae7a6bdc99c92d51c77b156573/macOS/Config/Swift%20Dialog/onboarding_scripts.zip" # Enter your own URL here
+onboardingScriptsUrl="https://blobmacosonboarder.blob.core.windows.net/macos-onboarder/Swift%20Dialog/onboarding_scripts.zip"
 appname="onBoarding"                                                 
 logandmetadir="/Library/Application Support/Microsoft/IntuneScripts/$appname"   # The location of our logs and last updated data
 enrollmentWindowHours=.05                                                        # The number of hours after enrollment that the script should run
