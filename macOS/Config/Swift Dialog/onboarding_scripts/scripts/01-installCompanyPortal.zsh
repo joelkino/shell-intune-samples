@@ -32,16 +32,16 @@
 ## Feedback: neiljohn@microsoft.com
 
 # User Defined variables
-mauurl="https://go.microsoft.com/fwlink/?linkid=830196"                         # URL to fetch latest MAU
-weburl="https://go.microsoft.com/fwlink/?linkid=853070"                         # What is the Azure Blob Storage URL?
-appname="Company Portal"                                                        # The name of our App deployment script (also used for Octory monitor)
-app="Company Portal.app"                                                        # The actual name of our App once installed
+mauurl="https://go.microsoft.com/fwlink/?linkid=830196"                                        # URL to fetch latest MAU
+weburl="https://go.microsoft.com/fwlink/?linkid=853070"                                        # What is the Azure Blob Storage URL?
+appname="Company Portal"                                                                       # The name of our App deployment script (also used for Octory monitor)
+app="Company Portal.app"                                                                       # The actual name of our App once installed
 logandmetadir="/Library/Application Support/Microsoft/IntuneScripts/installCompanyPortal"      # The location of our logs and last updated data
-processpath="/Applications/Company Portal.app/Contents/MacOS/Company Portal"    # The process name of the App we are installing
-terminateprocess="true"                                                         # Do we want to terminate the running process? If false we'll wait until its not running
-autoUpdate="true"                                                               # Application updates itself, if already installed we should exit
-waitForSplashScreen=true                                                                    # Should we hold the script until an onboard splashscreen is running?   
-SplashScreenProcess="Dialog"                                                                # If we do wait for a splash screen, what's the process name? Octory | Dialog
+processpath="/Applications/Company Portal.app/Contents/MacOS/Company Portal"                   # The process name of the App we are installing
+terminateprocess="true"                                                                        # Do we want to terminate the running process? If false we'll wait until its not running
+autoUpdate="true"                                                                              # Application updates itself, if already installed we should exit
+waitForSplashScreen=true                                                                       # Should we hold the script until an onboard splashscreen is running?   
+SplashScreenProcess="Dialog"                                                                   # If we do wait for a splash screen, what's the process name? Octory | Dialog
 SSOProfile="com.apple.extensiblesso"
 
 # Generated variables
